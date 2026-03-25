@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand: #2563eb;
+}
+
+@utility btn {
+  @apply rounded-lg font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center;
+}
+
+body {
+  @apply bg-gray-50 text-gray-900;
+}
+
+.card {
+  @apply bg-white p-6 rounded-xl shadow-sm border border-gray-100;
+}
+
+@utility btn-primary {
+  @apply btn px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 active:scale-95 shadow-sm;
+}
+
+@utility btn-secondary {
+  @apply btn px-4 py-2 bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 active:scale-95 shadow-xs;
+}
+
+@utility btn-danger {
+  @apply btn px-4 py-2 bg-white text-red-600 border border-red-100 hover:bg-red-50 active:scale-95;
+}
+
+/* Ensure icons are always visible and large enough */
+button svg {
+  @apply w-[1.5rem] h-[1.5rem] shrink-0;
+}
+
+.input {
+  @apply w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all;
+}
+
+.label {
+  @apply block text-sm font-medium text-gray-700 mb-1;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
