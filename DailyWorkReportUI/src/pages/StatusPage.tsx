@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { getStatuses, createStatus, updateStatus } from "../api/statusApi";
+import { getStatuses, createStatus, updateStatus, deleteStatus } from "../api/statusApi";
 import type { Status } from "../types";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
-import { Edit2, CheckCircle2, XCircle } from "lucide-react";
+import { Edit2, CheckCircle2, XCircle, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 
 export const StatusPage: React.FC = () => {
   const [statuses, setStatuses] = useState<Status[]>([]);
   const [name, setName] = useState("");
+  const [color, setColor] = useState("#000000");
   const [editingId, setEditingId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -33,13 +34,14 @@ export const StatusPage: React.FC = () => {
 
     try {
       if (editingId) {
-        await updateStatus(editingId, { name, isActive: true });
+        await updateStatus(editingId, { name, color, isActive: true });
         toast.success("Status updated");
       } else {
-        await createStatus({ name, isActive: true });
+        await createStatus({ name, color, isActive: true });
         toast.success("Status created");
       }
       setName("");
+      setColor("#000000");
       setEditingId(null);
       fetchStatuses();
     } catch (error) {
@@ -53,6 +55,17 @@ export const StatusPage: React.FC = () => {
       fetchStatuses();
     } catch (error) {
       toast.error("Error toggling status visibility");
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    if (!window.confirm("Are you sure you want to delete this status?")) return;
+    try {
+      await deleteStatus(id);
+      toast.success("Status deleted");
+      fetchStatuses();
+    } catch (error) {
+      toast.error("Error deleting status. It might be in use.");
     }
   };
 
@@ -71,11 +84,18 @@ export const StatusPage: React.FC = () => {
             value={name} 
             onChange={(e) => setName(e.target.value)} 
           />
+          <input 
+            type="color" 
+            value={color} 
+            onChange={(e) => setColor(e.target.value)} 
+            className="h-10 w-14 p-1 rounded-md border border-gray-300 cursor-pointer"
+            title="Choose Status Color"
+          />
           <Button type="submit">
             {editingId ? "Update" : "Create"}
           </Button>
           {editingId && (
-            <Button variant="secondary" onClick={() => { setEditingId(null); setName(""); }}>
+            <Button variant="secondary" onClick={() => { setEditingId(null); setName(""); setColor("#000000"); }}>
               Cancel
             </Button>
           )}
@@ -91,7 +111,10 @@ export const StatusPage: React.FC = () => {
               ) : (
                 <XCircle className="text-gray-400" size={20} />
               )}
-              <span className={`font-medium ${!status.isActive ? 'text-gray-400 line-through' : ''}`}>
+              <span 
+                className={`font-medium ${!status.isActive ? 'text-gray-400 line-through' : ''}`}
+                style={{ color: status.isActive && status.color ? status.color : undefined }}
+              >
                 {status.name}
               </span>
             </div>
@@ -100,9 +123,17 @@ export const StatusPage: React.FC = () => {
                 variant="secondary" 
                 title="Edit"
                 className="p-2 h-10 w-10 text-blue-600 shadow-none border-none bg-transparent hover:bg-white" 
-                onClick={() => { setEditingId(status.id); setName(status.name); }}
+                onClick={() => { setEditingId(status.id); setName(status.name); setColor(status.color || "#000000"); }}
               >
                 <Edit2 size={20} />
+              </Button>
+              <Button 
+                variant="secondary" 
+                title="Delete"
+                className="p-2 h-10 w-10 text-red-600 shadow-none border-none bg-transparent hover:bg-red-50" 
+                onClick={() => handleDelete(status.id)}
+              >
+                <Trash2 size={20} />
               </Button>
               <Button 
                 variant={status.isActive ? "danger" : "primary"} 

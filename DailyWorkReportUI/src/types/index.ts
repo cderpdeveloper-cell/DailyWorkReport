@@ -2,12 +2,14 @@ export interface Project {
   id: number;
   name: string;
   isActive: boolean;
+  color?: string;
 }
 
 export interface Status {
   id: number;
   name: string;
   isActive: boolean;
+  color?: string;
 }
 
 export interface TimeLog {
