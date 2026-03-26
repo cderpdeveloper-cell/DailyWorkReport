@@ -8,7 +8,7 @@ export const Dashboard: React.FC = () => {
     const [stats, setStats] = useState<DashboardStats>({
         activeReports: 0,
         completedProjects: 0,
-        totalHours: 0
+        totalHours: "0:00"
     });
     const [isLoading, setIsLoading] = useState(true);
 
@@ -29,7 +29,7 @@ export const Dashboard: React.FC = () => {
     const statItems = [
         { label: "Active Reports", value: stats.activeReports.toString(), icon: FileText, color: "text-blue-600", bg: "bg-blue-50" },
         { label: "Completed Projects", value: stats.completedProjects.toString(), icon: CheckCircle2, color: "text-green-600", bg: "bg-green-50" },
-        { label: "Total Hours", value: `${stats.totalHours}h`, icon: Clock, color: "text-purple-600", bg: "bg-purple-50" },
+        { label: "Total Hours", value: stats.totalHours, icon: Clock, color: "text-purple-600", bg: "bg-purple-50" },
     ];
 
     if (isLoading) {

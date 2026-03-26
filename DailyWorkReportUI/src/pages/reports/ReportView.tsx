@@ -137,7 +137,7 @@ export const ReportView: React.FC = () => {
                                         <td className="border border-black px-2 py-2 text-center">{formatTime(log.inTime)}</td>
                                         <td className="border border-black px-2 py-2 text-center">{formatTime(log.outTime)}</td>
                                         <td className="border border-black px-2 py-2 text-center font-bold">
-                                            {log.decimalHours}
+                                            {log.hours}:{String(log.minutes).padStart(2, '0')}
                                         </td>
                                     </tr>
                                 ) )}
