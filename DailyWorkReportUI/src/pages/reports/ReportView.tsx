@@ -44,13 +44,18 @@ export const ReportView: React.FC = () => {
         }
     };
 
-    const getStatusColor = (status: string | undefined) => {
-        if (!status) return "text-gray-600";
-        const s = status.toLowerCase();
-        if (s.includes("run")) return "text-orange-600"; // Running
-        if (s.includes("test")) return "text-blue-600"; // Testing / In Testing
-        if (s.includes("comp")) return "text-green-600"; // Completed
-        return "text-gray-600";
+    const getStatusStyle = (work: any) => {
+        if (work.status?.color) return { color: work.status.color };
+        const s = work.status?.name?.toLowerCase() || "";
+        if (s.includes("run")) return { color: "#ea580c" }; // orange-600
+        if (s.includes("test")) return { color: "#2563eb" }; // blue-600
+        if (s.includes("comp")) return { color: "#16a34a" }; // green-600
+        return { color: "#4b5563" }; // gray-600
+    };
+
+    const getProjectStyle = (work: any) => {
+        if (work.project?.color) return { color: work.project.color };
+        return { color: "#16a34a" }; // green-600
     };
 
     const formatTime = (time: string | undefined) => {
@@ -114,8 +119,8 @@ export const ReportView: React.FC = () => {
                                                 <td className="border border-black px-2 py-2 align-top" rowSpan={work.timeLogs.length}>
                                                     <div className="font-bold">
                                                         {work.title} 
-                                                        <span className="text-green-600 ml-1">({work.project?.name})</span>
-                                                        <span className={`${getStatusColor(work.status?.name)} ml-1`}>
+                                                        <span style={getProjectStyle(work)} className="ml-1">({work.project?.name})</span>
+                                                        <span style={getStatusStyle(work)} className="ml-1">
                                                             ({work.status?.name})
                                                         </span>
                                                     </div>
